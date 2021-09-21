@@ -59,6 +59,7 @@ func main() {
 		}
 	}()
 
+	log.Infof("Starting bot with token %v", botToken)
 	bot, err := discordgo.New("Bot " + botToken)
 	if err != nil {
 		log.Fatalf("Error starting bot: %v", err)
