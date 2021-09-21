@@ -1,17 +1,17 @@
-FROM ubuntu:latest as builder
+FROM golang:1.16 as builder
 
 RUN apt-get update && apt-get -y upgrade
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libxss1 golang-go
-
 # Build the bot
-COPY . .
+COPY . timekeeper
+
+WORKDIR timekeeper
 
 RUN go build
 
 # Run the bot
-FROM ubuntu:latest
+FROM golang:1.16
 
-COPY --from=builder timekeeper-morty .
+COPY --from=builder /go/timekeeper/timekeeper-morty .
 
-CMD ["/timekeeper-morty"]
+CMD ["./timekeeper-morty"]
