@@ -20,8 +20,8 @@ const timezoneFile = "timezones.json"
 var timezones = make(map[string]string)
 
 func main() {
-	botToken := os.GetEnv("botToken")
-	if *botToken == "" {
+	botToken := os.Getenv("botToken")
+	if botToken == "" {
 		log.Fatalf("Bot token is empty, you must specify one")
 	}
 
@@ -59,7 +59,7 @@ func main() {
 		}
 	}()
 
-	bot, err := discordgo.New("Bot " + *botToken)
+	bot, err := discordgo.New("Bot " + botToken)
 	if err != nil {
 		log.Fatalf("Error starting bot: %v", err)
 	}
