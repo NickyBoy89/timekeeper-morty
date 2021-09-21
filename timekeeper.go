@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -21,10 +20,7 @@ const timezoneFile = "timezones.json"
 var timezones = make(map[string]string)
 
 func main() {
-	botToken := flag.String("botToken", "", "Token for the bot to run")
-
-	flag.Parse()
-
+	botToken := os.GetEnv("botToken")
 	if *botToken == "" {
 		log.Fatalf("Bot token is empty, you must specify one")
 	}
