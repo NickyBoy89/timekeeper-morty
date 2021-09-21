@@ -20,7 +20,7 @@ const timezoneFile = "timezones.json"
 var timezones = make(map[string]string)
 
 func main() {
-	botToken := os.Getenv("botToken")
+	botToken := strings.Trim(os.Getenv("botToken"), "\n")
 	if botToken == "" {
 		log.Fatalf("Bot token is empty, you must specify one")
 	}
