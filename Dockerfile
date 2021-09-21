@@ -1,6 +1,8 @@
-FROM alpine:latest as builder
+FROM ubuntu:latest as builder
 
-RUN apk add --update go
+RUN apt-get update && apt-get -y upgrade
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libxss1 golang-go
 
 # Build the bot
 COPY . .
@@ -8,7 +10,7 @@ COPY . .
 RUN go build
 
 # Run the bot
-FROM alpine:latest
+FROM ubuntu:latest
 
 COPY --from=builder timekeeper-morty .
 
