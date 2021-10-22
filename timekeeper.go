@@ -14,7 +14,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const timezoneFile = "timezones.json"
+const (
+	saveDirectory = "savedTimezones"
+	timezoneFile  = saveDirectory + "/timezones.json"
+)
 
 // Stores the user's timezones when loaded into memory
 var timezones = make(map[string]string)
@@ -101,8 +104,17 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Error setting timezone to [%v]: %v", timezone, err))
 				return
 			}
-			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Set timezone to %v", zone))
-			timezones[m.Author.ID] = zone.String()
+			// Person mentioned another person, set the time for them
+			for _, otherPerson := range m.Mentions {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Set timezone for %v to %v", otherPerson.Mention(), timezone))
+				timezones[otherPerson.ID] = zone.String()
+			}
+
+			// If nobody else is mentioned, set the own person's timezone
+			if len(m.Mentions) <= 0 {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Set timezone to %v", zone))
+				timezones[m.Author.ID] = zone.String()
+			}
 		// Sets their time
 		case "timefor":
 			authorLoc, err := time.LoadLocation(timezones[m.Author.ID])
